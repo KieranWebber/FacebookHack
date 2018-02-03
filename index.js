@@ -18,8 +18,7 @@ io.on('connection', function(socket) {
     start();
     console.log('a user connected');
     // Let them know the timestamp
-    socket.emit('time', timeToStart);
-    socket.emit('title', title);
+    socket.emit('sync', {time: timeToStart, title: title});
     socket.on('register', function(user) {
         if (timeToStart <= 0) {
             socket.emit('late', 'too late');
@@ -31,6 +30,7 @@ io.on('connection', function(socket) {
                 break;
             }
         }
+        users.add(user);
     });
 });
 
@@ -127,6 +127,10 @@ function start() {
     setInterval(function() {timeToStart -= 1;}, 1000);
     performASR('https://video-weaver.fra02.hls.ttvnw.net/v1/playlist/CsgCXmXl1Jr1MuvyfVbvmCIMgShi6Y1VZ7zSljHNhcsUO-umhI1zdjZk8X3WtwOpITIQ4qfywLlhZZh_lSdFK0Z2dgRTfERcd0U3OcvNMRM42t8Z52e2dKU_BJnBtNKYmOTx_Cm8OaEIvZB7_SonCes-8V6u9tIK48azH6TxkIQap18B_jtlnK0rxvHx6zNw6QtsB4Jmxo9OhG1j0EO3MADIbdYy467glUavANoei7LTh7yzmZlxei7HPd6_BkJFNW_I_MzzyqB73LRUuSnKgh_8YdtahXntIqQOK5Vn0emjeWuZmOGVs0Ps5JfVQNtwg8VhKsgzQ5Fq_9RCmnBjkMOD7nsIW7mahQ0U99iNaIfqQ9Xxct9C03ryTHEV5_ihH0DlQNIQq9pmRTf5n2DhMMc4zqAg3IVUAadq0dzrS8AK2I52TluwFHKZaRIQXMEOFcAxomvF7hdRRl0b3hoMJ8Et7OW-Mu9fbDhn.m3u8');
 }
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
 /*command.audioChannels(1).output('./audio.flac').on('end', function() {
     console.log('conversion ended');
     callback(null);
