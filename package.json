@@ -1,0 +1,20 @@
+{
+  "name": "bingo-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/speech": "^1.0.1",
+    "express": "^4.15.2",
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "microsoft-speech-browser-sdk": "0.0.12",
+    "socket.io": "^2.0.4",
+    "stream-throttle": "^0.1.3"
+  }
+}
