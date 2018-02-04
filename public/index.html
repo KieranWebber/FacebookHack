@@ -11,7 +11,7 @@
 <body>
 <div class="navbar">
     <ul>
-        <li class="logo">HQWords</li>
+        <li class="logo">GuessNow</li>
         <li class="nav-item login"><div class="login-btn">Log in with Facebook</div></li>
         <li class="nav-item logged-in"><img class="avatar" src=""><div class="username">bogdanstanga</div></li>
     </ul>
@@ -22,14 +22,14 @@
             <div id="timer">
             </div>
             <div class="info">
-                until next game-stream:<br>
-                <span class="stream">PewDiePie live from London</span>
+                until next livestream:<br>
+                <span class="stream"></span>
             </div>
         </div>
         <div class="input-container">
             <div id="compose-container">
                 <form id="compose-form">
-                <input id="compose" type="text" maxlength="30" autocomplete="off" placeholder="Enter your guesses">
+                    <input id="compose" type="text" maxlength="30" autocomplete="off" placeholder="Enter your guesses">
                 </form>
                 <div id="limiter">0/5</div>
             </div>
@@ -42,74 +42,21 @@
         </div>
         <div id="leaderboard">
             <h1>End of game</h1>
-            <div class="titleHead"  style="padding-bottom: 20px;">
-                <h0>Results</h0>
-            </div>
-            <div class="endDiv">
-                <div style="font-weight: bold;" class="positionCell">
-                    Position
-                </div>
-                <div style="font-weight: bold;" class="nameCell">
-                    Name
-                </div>
-                <div style="font-weight:bold;" class="scoreCell">
-                    Score
-                </div>
-                <div class="positionCell">
-                    1.
-                </div>
-                <div class="nameCell">
-                    Andrew
-                </div>
-                <div class="scoreCell">
-                    30
-                </div>
-                <div class="positionCell">
-                    2.
-                </div>
-                <div class="nameCell">
-                    Steven
-                </div>
-                <div class="scoreCell">
-                    28
-                </div>
-                <div class="positionCell">
-                    3.
-                </div>
-                <div class="nameCell">
-                    Apple
-                </div>
-                <div class="scoreCell">
-                    24
-                </div>
-                <hr />
-                <div class="positionCell">
-                    6
-                </div>
-                <div class="nameCell">
-                    You
-                </div>
-                <div class="scoreCell">
-                    12
-                </div>
-                <hr />
-            </div>
-            <div class="titleHead"  style="padding-top: 20px;padding-bottom:10px;">
-                <h0>Top words</h0>
-            </div>
-            <div class="endDiv">
-                <div class="topWord">
-                    <h5 style="font-weight:bold;">Augmented</h5>
-                    <h0>30</h0>
-                </div>
-                <div class="topWord">
-                    <h5 style="font-weight:bold;">Reality</h5>
-                    <h0>20</h0>
-                </div>
-                <div class="topWord">
-                    <h5 style="font-weight:bold;">Camera</h5>
-                    <h0>10</h0>
-                </div>
+            <table id="leaderboard-table">
+                <thead>
+                <tr>
+                    <td>Position</td>
+                    <td>Username</td>
+                    <td>Score</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <div class="popular-words ingame">
+                <h2>Most popular words</h2>
+
             </div>
         </div>
     </div>
@@ -134,7 +81,7 @@
 
 <div class="login-modal">
     <div class="inner-modal">
-        <div class="title">Login to start playing HQWords</div>
+        <div class="title">Login to start playing GuessNow</div>
         <div class="login-btn">Log in with Facebook</div>
     </div>
 </div>

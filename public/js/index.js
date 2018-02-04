@@ -2,6 +2,7 @@ var messageView;
 var user = false;
 var initState = 0;
 var playerStarted = false;
+var userScores = [];
 
 var config = {
     maxWords: 5,
@@ -163,6 +164,9 @@ $(document).ready(function () {
         $(".stream").text(data.title);
         $('#video-player source').attr('src', data.videoUrl);
         $("#video-player")[0].load();
+        data.messages.forEach(function (msg) {
+            chat.addMessage(msg);
+        });
         timer.init(time + now);
     });
 
@@ -173,6 +177,7 @@ $(document).ready(function () {
     socket.on('scores', function (users) {
         console.log("SCORES");
         console.log(users);
+        userScores = users;
         var leaderboard = $("#live-leaderboard");
         leaderboard.empty();
         var i = 1;
@@ -181,7 +186,7 @@ $(document).ready(function () {
             leaderboard.append('<div class="leaderboard-user">' + i++ + ". " + user.name + " (" + score + " points)</div>")
         });
         for (i = 0; i < users.length; i++) {
-            if(users[i].session === user.id){
+            if (users[i].session === user.id) {
                 $("#words").empty();
                 for (var j = 0; j < users[i].guesses.length; j++) {
                     var word = users[i].guesses[j];
@@ -301,5 +306,39 @@ function sendWords() {
 }
 
 function showLeaderboard() {
+
+    var popular = {};
+
+    for (var i = 0; i < userScores.length; i++) {
+        var u = userScores[i];
+        if (user && u.session === user.id) {
+            $("#leaderboard-table tbody").append("<tr class='own-score'><td>" + (i + 1) + ".</td><td>" + u.name + "</td><td>" + u.score + "</td></tr>")
+        } else if (i < 5) {
+            $("#leaderboard-table tbody").append("<tr><td>" + (i + 1) + ".</td><td>" + u.name + "</td><td>" + u.score + "</td></tr>")
+        }
+        var guesses = u.guesses;
+        for (var j = 0; j < guesses.length; j++) {
+            if (guesses[j] in popular) {
+                popular[guesses[j]] += u.guessesScore[j];
+            } else {
+                popular[guesses[j]] = u.guessesScore[j];
+            }
+        }
+    }
+
+    var sortable = [];
+    for (var p in popular) {
+        sortable.push([p, popular[p]]);
+    }
+
+    sortable.sort(function (a, b) {
+        return b[1] - a[1];
+    });
+
+    for (i = 0; i < Math.min(3, sortable.length); i++) {
+        if (sortable[i][1] > 0) {
+            $(".popular-words").append("<div class='word-bubble'>" + sortable[i][0] + "<div class='score'>" + sortable[i][1] + "</div></div>");
+        }
+    }
     $("#leaderboard").show();
 }

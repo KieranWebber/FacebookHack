@@ -146,11 +146,28 @@ body {
         top: 0;
         left: 0;
         text-align: center;
-        h1 {
+        h1, h2{
+          color:white;
+        }
+        #leaderboard-table {
+          width: 50%;
+          margin-left: 25%;
+          margin-top: 5%;
+          border-collapse: collapse;
           color: white;
+          thead {
+            font-weight: 600;
+            tr{
+              height: 50px;
+            }
+          }
+          .own-score {
+            border-bottom: 2px solid white;
+            border-top: 2px solid white;
+          }
         }
       }
-      #words {
+      #words, .popular-words {
         width: 100%;
         text-align: center;
         position: absolute;
@@ -282,6 +299,9 @@ body {
           width: 100%;
           display: block;
           position: relative;
+          .simplebar-content{
+            overflow-x: hidden;
+          }
           .leaderboard-user {
             color: #d1d1d1;
             padding: 0 10px;
