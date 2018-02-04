@@ -9,24 +9,24 @@ const io = require('socket.io')(http);
 
 // Globals
 var wordData = {};
-var users = [{name: "Dev", session: "", guesses: ["to be as a person", "person"], guessesScore: [0, 0], score: 0}];
-var timeToStart = 2; // 10 Mins
+var users = [{name: "Dev", session: "", guesses: ["and", "person"], guessesScore: [0, 0, 0, 0, 0], score: 0}];
+var timeToStart = 1; // 10 Mins
 var title = "Facebook F8";
 var lastWords = new CircularBuffer(5);
 var timeStamp = Math.floor(Date.now());
 var video = "keynote-gb.m4v";
 var mockedAudio = {
-"i4": "We are making the camera the first Augmented reality platform",
-"i7": "Alright so you are going to swipe the camera",
-"i11": "And you are going to start discovering effects that your friends are using",
-"i14": "And that are relevant to the place you are at nearby",
-"i17": "So now for real augmented reality",
-"i19": "You don’t just want the ability to do those tools",
-"i22": "You also want the ability to have realistic 3d objects",
-"i25": "And in order to do that",
-"i27": "You need to have a platform that has",
-"i30": "That gives them precise location a realistic relationship",
-"i33": "With objects around them in their environment"
+    "i4": "We are making the camera the first Augmented reality platform",
+    "i7": "Alright so you are going to swipe the camera",
+    "i11": "And you are going to start discovering effects that your friends are using",
+    "i14": "And that are relevant to the place you are at nearby",
+    "i17": "So now for real augmented reality",
+    "i19": "You don’t just want the ability to do those tools",
+    "i22": "You also want the ability to have realistic 3d objects",
+    "i25": "And in order to do that",
+    "i27": "You need to have a platform that has",
+    "i30": "That gives them precise location a realistic relationship",
+    "i33": "With objects around them in their environment"
 };
 
 
@@ -48,11 +48,16 @@ io.on('connection', function(socket) {
         }
         for(var i = 0; i < users.length; i++) {
             // Forgive and replace
-            if (users[i].session == user.session) {
+            if (users[i].session === user.session) {
+                user.score = 0;
+                user.guessesScore = [0, 0, 0, 0, 0];
                 users[i] = user;
                 return;
             }
         }
+        user.score = 0;
+        user.guesses = [];
+        user.guessesScore = [0, 0, 0, 0, 0];
         users.push(user);
     });
     socket.on('message', function(msg) {
@@ -73,9 +78,9 @@ io.on('connection', function(socket) {
 
 function compareUsers(userA, userB) {
     if (userA.score < userB.score)
-        return -1;
-    if(userA.score > userB.score)
         return 1;
+    if(userA.score > userB.score)
+        return -1;
     return 0;
 }
 
@@ -94,26 +99,28 @@ function calculateScores() {
     users.forEach(function(user) {
         var score = user.score;
         user.guesses.forEach(function(guess) {
+            var oriGuess = guess;
             guess = guess.toLowerCase().trim().split(" ");
             var tempCounter = 0;
             if (guess.length > 1 && guess.length <= 5) {
                 for (var i = 0; i < guess.length; i++) {
                     if (guess[i] === lastFive[5 - guess.length + i]) {
-                       tempCounter++;
+                        tempCounter++;
                     }
                 }
                 if (tempCounter === guess.length) {
                     score += guess.length * 3;
-                    user.guessesScore[user.guesses.indexOf(guess)] += guess.length * 3;
+                    user.guessesScore[user.guesses.indexOf(oriGuess)] += guess.length * 3;
                 }
             } else if (guess.length === 1) {
                 if (guess[0] === lastFive[4]) {
                     score++;
-                    user.guessesScore[user.guesses.indexOf(guess)]++;
+                    user.guessesScore[user.guesses.indexOf(oriGuess)]++;
                 }
             }else {
                 console.log("something must be wrong with the validation")
             }
+            console.log(user.guessesScore);
         });
         user.score = score;
         console.log(user.score);
@@ -141,7 +148,7 @@ function start() {
     var interval = setInterval(function() {
         console.log("Time Left: " + timeToStart);
         timeToStart -= 1;
-        if (timeToStart == 0) {
+        if (timeToStart === 0) {
             //clearInterval(interval);
             timeStamp = Math.floor(Date.now());
         }
@@ -154,7 +161,7 @@ function start() {
 }
 
 http.listen(3000, function(){
-  console.log('listening on *:3000');
-  start();
+    console.log('listening on *:3000');
+    start();
 });
 //performASR();
