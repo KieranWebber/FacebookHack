@@ -347,5 +347,50 @@ body {
       margin-bottom: 1.5em; }
     .login-modal .inner-modal .login-btn {
       font-size: 18px; }
+            .positionCell {
+            float: left;
+            width: 10%;
+            height: 20px;
+            margin: 2.5% 2.5% 2.5% 2.5%;
+            background-color: black;
+            color: white;
+        }
+        .nameCell {
+            float: left;
+            width: 60%;
+            height: 20px;
+            margin: 2.5% 2.5% 2.5% 2.5%;
+            padding-left: 2.5%;
+            background-color: black;
+            color: white;
+        }
+        .scoreCell {
+            float: left;
+            width: 10%;
+            height: 20px;
+            margin: 2.5% 2.5% 2.5% 2.5%;
+            background-color: black;
+            color: white;
+        }
+        .endDiv {
+            width: 50%;
+            margin: auto;
+        }
+        hr{
+            border-color: white;
+            width: 100%;
+        }
+        .topWord {
+            float: left;
+            width: 33%;
+            background-color: black;
+            color: white;
+        }
+        h0, h1, h2, h3, h4, h5, h6{
+            color: white;
+        }
+        .titleHead {
+            width: 100%;
+        }
 
 /*# sourceMappingURL=style.css.map */

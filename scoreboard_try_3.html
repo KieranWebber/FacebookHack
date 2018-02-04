@@ -1,0 +1,148 @@
+﻿<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Scoreboard</title>
+    <script type="text/javascript" src="jq.js"></script>
+    <style>
+        body {
+            background-color: white;
+            color: white;
+        }
+        .main {
+            width: 50%;
+            margin: auto;
+        }
+        .positionCell {
+            float: left;
+            width: 20%;
+            height: 20px;
+            background-color: black;
+        }
+        .nameCell {
+            float: left;
+            width: 60%;
+            height: 20px;
+            background-color: black;
+        }
+        .scoreCell {
+            float: left;
+            width: 20%;
+            height: 20px;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="main" id="mainDiv">
+        <div class="positionCell" style="font-weight: bold;">Position</div>
+        <div class="nameCell" style="font-weight: bold;">Name</div>
+        <div class="scoreCell" style="font-weight: bold;">Score</div>
+        <script type="text/javascript">
+     <!--
+
+     var all = [];
+     function data(pName, pScore) {
+         this.name = pName;
+         this.score = pScore;
+     }
+     function randScores() {
+         return Math.floor(Math.random() * 1000);
+     }
+     function initialScores() {
+         var pos = 20;
+         var names = ["Adam", "Bob", "Caitlyn", "Danny", "Edgar", "Franklin"];
+         var scores = [randScores(), randScores(), randScores(), randScores(), randScores(), randScores()];
+         for (var i = 0; i < names.length; i++) {
+             all[i] = new data(names[i], scores[i]);
+         }
+         for (var i = 0; i < all.length; i++) {
+             for (var j = 0; j < all.length; j++) {
+                 if (all[i].score > all[j].score) {
+                     var temp = all[i];
+                     all[i] = all[j];
+                     all[j] = temp;
+                 }
+             }
+         }
+         for (var i = 0; i < 3; i++) {
+             var parent = document.createElement("div");
+             parent.setAttribute("id", i.toString());
+             parent.setAttribute("position", "relative");
+             parent.style.position = "relative";
+             parent.setAttribute("class", "cell");
+             var posdiv = document.createElement("div");
+             posdiv.setAttribute("class", "positionCell");
+             posdiv.innerHTML = i+1;
+             var namdiv = document.createElement("div");
+             namdiv.setAttribute("class", "nameCell");
+             namdiv.innerHTML = all[i].name;
+             var scorediv = document.createElement("div");
+             scorediv.setAttribute("class", "positionCell");
+             scorediv.innerHTML = all[i].score;
+             parent.appendChild(posdiv);
+             parent.appendChild(namdiv);
+             parent.appendChild(scorediv);
+             document.getElementById("mainDiv").appendChild(parent);
+         }
+     }
+     
+     function update() {
+         var names = ["Adam", "Bob", "Caitlyn", "Danny", "Edgar", "Franklin"];
+         var scores = [randScores(), randScores(), randScores(), randScores(), randScores(), randScores()];
+         for (var i = 0; i < names.length; i++) {
+             all[i] = new data(names[i], scores[i]);
+         }
+         var x = 1;
+         for (var i = 0; i < all.length; i++) {
+             for (var j = 0; j < all.length; j++) {
+                     if (all[i].score > all[j].score) {
+                         var temp = all[i];
+                         all[i] = all[j];
+                         all[j] = temp;
+                     }
+             }
+         }
+         var parenti = document.getElementById("0");
+         if (all[0].name != parenti.childNodes[0].innerHTML) {
+             $("#0").fadeOut(250);
+             parenti.childNodes[1].innerHTML = all[0].name;
+             parenti.childNodes[2].innerHTML = all[0].score;
+             $("#0").fadeIn(250);
+         }
+         else {
+             parenti.childNodes[1].innerHTML = all[0].score;
+         }
+         setTimeout(function () {
+             var parenti = document.getElementById("1");
+             if (all[1].name != parenti.childNodes[0].innerHTML) {
+                 $("#1").fadeOut(250);
+                 parenti.childNodes[1].innerHTML = all[1].name;
+                 parenti.childNodes[2].innerHTML = all[1].score;
+                 $("#1").fadeIn(250);
+             }
+             else {
+                 parenti.childNodes[1].innerHTML = all[1].score;
+             }
+         }, 500);
+         setTimeout(function () {
+             var parenti = document.getElementById("2");
+             if (all[2].name != parenti.childNodes[0].innerHTML) {
+                 $("#2").fadeOut(250);
+                 parenti.childNodes[1].innerHTML = all[2].name;
+                 parenti.childNodes[2].innerHTML = all[2].score;
+                 $("#2").fadeIn(250);
+             }
+             else {
+                 parenti.childNodes[1].innerHTML = all[2].score;
+             }
+         }, 1000);
+     }
+
+     initialScores();
+     setInterval(update, 10000);
+     </script>
+    </div>
+
+</body>
+</html>
+
