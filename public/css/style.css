@@ -135,12 +135,15 @@ body {
           width: 50%;
           margin-left: 25%;
           margin-top: 5%;
+          table-layout: fixed;
           border-collapse: collapse;
           color: white; }
           body main #video-container #leaderboard #leaderboard-table thead {
             font-weight: 600; }
             body main #video-container #leaderboard #leaderboard-table thead tr {
               height: 50px; }
+          body main #video-container #leaderboard #leaderboard-table td {
+            width: 33%; }
           body main #video-container #leaderboard #leaderboard-table .own-score {
             border-bottom: 2px solid white;
             border-top: 2px solid white; }
