@@ -47,8 +47,7 @@ body {
         font-size: 1.8rem;
         float: left; }
       body .navbar ul .login-btn {
-        margin: 10px 20px;
-        display: none; }
+        margin: 10px 20px; }
       body .navbar ul .logged-in {
         font-size: 18px;
         display: none;
@@ -128,7 +127,8 @@ body {
         display: none;
         width: 100%;
         top: 0;
-        left: 0; }
+        left: 0;
+        text-align: center; }
         body main #video-container #leaderboard h1 {
           color: white; }
       body main #video-container #words {
@@ -151,8 +151,22 @@ body {
           position: relative;
           background: #fff;
           border-radius: 100px;
-          cursor: pointer;
           transition: 0.1s; }
+          body main #video-container #words .word-bubble .score {
+            width: 75px;
+            display: none;
+            margin: 0;
+            color: white;
+            text-align: center;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+            height: 53px;
+            right: 0;
+            position: absolute;
+            top: 0;
+            box-sizing: border-box;
+            padding: 13px 0;
+            background: #ff0000; }
           body main #video-container #words .word-bubble .remove {
             position: absolute;
             top: -40px;
@@ -167,10 +181,16 @@ body {
             color: #ff0000;
             text-align: center;
             vertical-align: middle; }
-          body main #video-container #words .word-bubble:hover {
-            background: #d8d8d8; }
-            body main #video-container #words .word-bubble:hover .remove {
-              display: block; }
+        body main #video-container #words.ingame .word-bubble {
+          padding: 12px 90px 12px 40px; }
+          body main #video-container #words.ingame .word-bubble .score {
+            display: block; }
+        body main #video-container #words.removable .word-bubble {
+          cursor: pointer; }
+        body main #video-container #words.removable .word-bubble:hover {
+          background: #d8d8d8; }
+          body main #video-container #words.removable .word-bubble:hover .remove {
+            display: block; }
       body main #video-container .input-container {
         width: 100%;
         top: 50%;
@@ -206,6 +226,30 @@ body {
       min-height: 100%;
       max-width: 350px;
       background: #0e0c13; }
+      body main #sidebar #live-leaderboard-container {
+        width: calc(100% - 20px);
+        height: calc(50% - 70px);
+        display: none;
+        margin: 10px 0 0 10px;
+        border: 1px solid #4f4f4f2b;
+        box-sizing: border-box;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); }
+        body main #sidebar #live-leaderboard-container .title {
+          color: white;
+          padding: 5px 10px; }
+        body main #sidebar #live-leaderboard-container #live-leaderboard {
+          padding: 5px 0;
+          height: calc(100% - 40px);
+          width: 100%;
+          display: block;
+          position: relative; }
+          body main #sidebar #live-leaderboard-container #live-leaderboard .leaderboard-user {
+            color: #d1d1d1;
+            padding: 0 10px;
+            width: 100%;
+            height: 25px;
+            display: block;
+            font-size: 16px; }
       body main #sidebar #chat-container {
         width: calc(100% - 20px);
         height: calc(100% - 110px);
@@ -235,6 +279,8 @@ body {
               font-weight: 600;
               font-size: 14px;
               color: #ff0000; }
+        body main #sidebar #chat-container.shrink {
+          height: calc(50% - 50px); }
       body main #sidebar #compose-chat-container {
         height: 100px;
         width: 100%;
@@ -251,6 +297,25 @@ body {
           width: calc(100% - 8px); }
         body main #sidebar #compose-chat-container .hint {
           color: rgba(209, 209, 209, 0.43); }
+
+#loader {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background: #262626;
+  min-width: 100%;
+  z-index: 100001;
+  top: 0;
+  left: 0;
+  position: fixed;
+  text-align: center; }
+  #loader img {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    display: block;
+    transform: translate(-50%, -50%);
+    z-index: 100002; }
 
 .login-modal {
   width: 100%;

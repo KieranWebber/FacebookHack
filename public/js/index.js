@@ -1,5 +1,7 @@
 var messageView;
 var user = false;
+var initState = 0;
+var playerStarted = false;
 
 var config = {
     maxWords: 5,
@@ -42,19 +44,29 @@ var timer = {
                 return;
             }
             if (-secondsRemaining > player.prop('duration')) {
-                timer.stop();
                 showLeaderboard();
+                timer.stop();
+                $("#live-leaderboard-container").hide();
+                $("#chat-container").removeClass("shrink");
+                nextState();
                 return;
             }
-            if (secondsRemaining < 0) {
-                player.prop('currentTime', -secondsRemaining);
+            if (!playerStarted) {
+                playerStarted = true;
+                if (secondsRemaining < 0) {
+                    player.prop('currentTime', -secondsRemaining);
+                }
+                player.show().trigger('play');
+                $("#live-leaderboard-container").show();
+                $("#chat-container").addClass("shrink");
+                $("#words").removeClass("removable").addClass("ingame");
+                nextState();
             }
-            player.show().trigger('play');
-            timer.stop();
         } else {
             var minutes = parseInt(secondsRemaining / 60);
             var seconds = secondsRemaining % 60;
             $("#timer").text(minutes.pad() + ":" + seconds.pad());
+            nextState();
         }
     },
     init: function (startEpoch) {
@@ -94,27 +106,25 @@ $(document).ready(function () {
         }
         $("#compose").val("");
         data.words.push(word);
+        sendWords();
         if (data.words.length >= config.maxWords) {
             $("#limiter").text("Done!");
             $("#compose").prop('disabled', true).attr('placeholder', 'Cool.');
         } else {
-            $("#limiter").text((data.words.length + 1) + "/" + config.maxWords);
+            $("#limiter").text(data.words.length + "/" + config.maxWords);
         }
-        $("#words").append("<div class='word-bubble'>" + word + "<div class='remove' data-word='" + word + "'>Remove</div></div>");
+        $("#words").append("<div class='word-bubble'>" + word + "<div class='remove' data-word='" + word + "'>Remove</div><div class='score'>0</div></div>");
 
 
-        $(".word-bubble .remove").click(function () {
-            var word = $(this).data('word');
-            $(this).closest('.word-bubble').remove();
-            data.words.remove(word);
-            $("#compose").prop('disabled', false).attr('placeholder', 'Enter your guesses');
-            $("#limiter").text((data.words.length + 1) + "/" + config.maxWords);
-        });
+        setWordsRemove();
     });
 
     $("#compose-chat").keypress(function (e) {
         if (e.which === 13 && !e.shiftKey) {
             var message = $(this).val();
+            if (message === '') {
+                return false;
+            }
             $(this).val("");
             var data = {message: message, username: user.username, avatar: user.avatar};
             socket.emit('message', data);
@@ -148,22 +158,55 @@ $(document).ready(function () {
     });
 
     socket.on('sync', function (data) {
-        console.log(data);
-        var now = parseInt(new Date().getTime() / 1000);
         var time = parseInt(data.time);
+        var now = parseInt(new Date().getTime() / 1000);
         $(".stream").text(data.title);
         $('#video-player source').attr('src', data.videoUrl);
         $("#video-player")[0].load();
-        timer.init(now + time);
+        timer.init(time + now);
     });
 
     socket.on('message', function (msg) {
         chat.addMessage(msg);
     });
 
-    socket.on('scores', function (data) {
+    socket.on('scores', function (users) {
         console.log("SCORES");
-        console.log(data);
+        console.log(users);
+        var leaderboard = $("#live-leaderboard");
+        leaderboard.empty();
+        var i = 1;
+        users.forEach(function (user) {
+            var score = user.score ? user.score : 0;
+            leaderboard.append('<div class="leaderboard-user">' + i++ + ". " + user.name + " (" + score + " points)</div>")
+        });
+        for (i = 0; i < users.length; i++) {
+            if(users[i].session === user.id){
+                $("#words").empty();
+                for (var j = 0; j < users[i].guesses.length; j++) {
+                    var word = users[i].guesses[j];
+                    $("#words").append("<div class='word-bubble'>" + word + "<div class='remove' data-word='" + word + "'>Remove</div><div class='score'>" + users[i].guessesScore[j] + "</div></div>");
+                }
+
+                break;
+            }
+        }
+    });
+
+    socket.on('userInfo', function (d) {
+        for (var i = 0; i < d.guesses.length; i++) {
+            var word = d.guesses[i];
+            data.words.push(word);
+            $("#words").append("<div class='word-bubble'>" + word + "<div class='remove' data-word='" + word + "'>Remove</div><div class='score'>0</div></div>");
+        }
+        if (data.words.length >= config.maxWords) {
+            $("#limiter").text("Done!");
+            $("#compose").prop('disabled', true).attr('placeholder', 'Cool.');
+        } else {
+            $("#limiter").text(data.words.length + "/" + config.maxWords);
+        }
+        setWordsRemove();
+        nextState();
     });
 
     $(".login-modal").click(function (e) {
@@ -186,14 +229,10 @@ window.fbAsyncInit = function () {
         console.log(response);
         if (response.status === "connected") {
             userConnected();
-
-            // FB.logout(function(response) {
-            //     console.log(response);
-            // });
         } else {
             $(".nav-item.login").show();
+            nextState();
         }
-
     });
 };
 
@@ -214,6 +253,26 @@ function userConnected() {
         $(".nav-item.login").hide();
         $(".nav-item.logged-in").css('display', 'inline-block').find(".username").text(user.username);
         $(".nav-item.logged-in").find(".avatar").attr('src', user.avatar);
+        socket.emit('getUser', user.id);
+    });
+}
+
+function nextState() {
+    initState++;
+    console.log("STATE: " + initState);
+    if (initState === 2) {
+        $("#loader").hide();
+    }
+}
+
+function setWordsRemove() {
+    $(".word-bubble .remove").click(function () {
+        var word = $(this).data('word');
+        $(this).closest('.word-bubble').remove();
+        data.words.remove(word);
+        $("#compose").prop('disabled', false).attr('placeholder', 'Enter your guesses');
+        $("#limiter").text(data.words.length + "/" + config.maxWords);
+        sendWords();
     });
 }
 
@@ -237,6 +296,9 @@ function slugify(text) {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+function sendWords() {
+    socket.emit('register', {name: user.username, session: user.id, guesses: data.words});
+}
 
 function showLeaderboard() {
     $("#leaderboard").show();

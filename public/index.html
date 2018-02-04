@@ -31,20 +31,26 @@
                 <form id="compose-form">
                 <input id="compose" type="text" maxlength="30" autocomplete="off" placeholder="Enter your guesses">
                 </form>
-                <div id="limiter">1/5</div>
+                <div id="limiter">0/5</div>
             </div>
         </div>
         <video id="video-player">
             <source src="videos/video.mp4" type="video/mp4" />
         </video>
-        <div id="words">
+        <div id="words" class="removable">
 
         </div>
         <div id="leaderboard">
-            <h1>Leaderboard</h1>
+            <h1>End of game</h1>
+            <table></table>
         </div>
     </div>
     <div id="sidebar">
+        <div id="live-leaderboard-container">
+            <div class="title">Live Leaderboard</div>
+            <div id="live-leaderboard" data-simplebar>
+            </div>
+        </div>
         <div id="chat-container" data-simplebar>
             <div class="chat-message">
                 <img class="avatar" src="http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png"><div class="content"><span class="username">bogdanstanga</span>: <span class="message">looooool akjjkl dljska</span></div>
@@ -63,6 +69,9 @@
         <div class="title">Login to start playing HQWords</div>
         <div class="login-btn">Log in with Facebook</div>
     </div>
+</div>
+<div id="loader">
+    <img src="images/loader.gif">
 </div>
 
 </html>
