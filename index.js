@@ -59,9 +59,19 @@ io.on('connection', function(socket) {
         }
         users.add(user);
     });
-    socket.on('message', function(msg){
+    socket.on('message', function(msg) {
         console.log('message: ' + msg);
         socket.broadcast.emit('message', msg);
+    });
+    socket.on('getUser', function(msg) {
+        console.log("User Req");
+        for(var i = 0; i < users.length; i++) {
+            if (users[i].session == msg) {
+                socket.emit('userInfo', users[i]);
+                return;
+            }
+        }
+        socket.emit('userInfo', {name: "", session: msg, guesses: [], guessesScore: [], score: 0});
     });
 });
 
@@ -210,6 +220,7 @@ function start() {
         timeToStart -= 1;
         if (timeToStart == 0) {
             //clearInterval(interval);
+            timeStamp = Math.floor(Date.now());
             performASR();
         }
     }, 1000);

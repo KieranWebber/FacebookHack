@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/speech": "^1.0.1",
+    "circular-buffer": "^1.0.2",
     "express": "^4.15.2",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
+    "hls-server": "^1.4.1",
     "microsoft-speech-browser-sdk": "0.0.12",
     "socket.io": "^2.0.4",
     "stream-throttle": "^0.1.3"
