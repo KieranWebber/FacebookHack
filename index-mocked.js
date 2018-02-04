@@ -9,7 +9,7 @@ const io = require('socket.io')(http);
 
 // Globals
 var wordData = {};
-var users = [{name: "Dev", session: "", guesses: ["and", "person"], guessesScore: [0, 0, 0, 0, 0], score: 0}];
+var users = [{name: "Dev", session: "", guesses: ["be", "camera", "augmented reality", "has", "tools"], guessesScore: [0, 0, 0, 0, 0], score: 0}];
 var timeToStart = 1; // 10 Mins
 var title = "Facebook F8";
 var lastWords = new CircularBuffer(5);
@@ -28,6 +28,8 @@ var mockedAudio = {
     "i30": "That gives them precise location a realistic relationship",
     "i33": "With objects around them in their environment"
 };
+var file = fs.readFileSync(path.join(__dirname, 'source.csv'), "utf8");
+var csvString = file.split(",").join(" ").split("\r\n").join(" ").split(" ");
 
 
 function getVideoTimestamp() {
@@ -93,6 +95,28 @@ function getHighestScoring() {
     });
 }
 
+function csvArrayMaker(csvString){
+    var csvArray = {};
+
+    for (var i = 0; i <= csvString.length; i += 2) {
+
+        csvArray[csvString[i]] = csvString[i+1];
+    }
+    return csvArray;
+}
+
+function wordValue(word) {
+    var csvArray = csvArrayMaker(csvString);
+    if (csvArray[word] === undefined) {
+        return 100;
+    }else if (csvArray[word] > 200000){
+        return 0;
+    }else{
+        return 100-csvArray[word]*100/200000;
+
+    }
+}
+
 function calculateScores() {
     var lastFive = lastWords.toarray().reverse();
     //console.log(lastFive);
@@ -103,19 +127,21 @@ function calculateScores() {
             guess = guess.toLowerCase().trim().split(" ");
             var tempCounter = 0;
             if (guess.length > 1 && guess.length <= 5) {
+                var tempScore = 0;
                 for (var i = 0; i < guess.length; i++) {
                     if (guess[i] === lastFive[5 - guess.length + i]) {
                         tempCounter++;
+                        tempScore = wordValue(guess[i]);
                     }
                 }
                 if (tempCounter === guess.length) {
-                    score += guess.length * 3;
-                    user.guessesScore[user.guesses.indexOf(oriGuess)] += guess.length * 3;
+                    score += tempScore * 3;
+                    user.guessesScore[user.guesses.indexOf(oriGuess)] += tempScore * 3;
                 }
             } else if (guess.length === 1) {
                 if (guess[0] === lastFive[4]) {
-                    score++;
-                    user.guessesScore[user.guesses.indexOf(oriGuess)]++;
+                    score += wordValue(guess[0]);
+                    user.guessesScore[user.guesses.indexOf(oriGuess)] += wordValue(guess[0]);
                 }
             }else {
                 console.log("something must be wrong with the validation")
