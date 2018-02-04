@@ -40,10 +40,12 @@ function getVideoTimestamp() {
 
 // Socket Setup
 io.on('connection', function(socket) {
-    start();
+    //start();
     console.log('a user connected');
     // Let them know the timestamp
-    socket.emit('sync', {time: timeToStart, title: title, start: timeToStart > 0 ? -1 : getVideoTimestamp()});
+    setTimeout(function() {
+        socket.emit('sync', {time: timeToStart, title: title, start: timeToStart > 0 ? -1 : getVideoTimestamp(), videoUrl: "keynote.m4v"});
+    }, 100);
     socket.on('register', function(user) {
         if (timeToStart <= 0) {
             socket.emit('late', 'too late');
@@ -57,6 +59,10 @@ io.on('connection', function(socket) {
         }
         users.add(user);
     });
+    socket.on('message', function(msg){
+        console.log('message: ' + msg);
+        socket.broadcast.emit('message', msg);
+    });
 });
 
 function compareUsers(userA, userB) {
@@ -69,6 +75,11 @@ function compareUsers(userA, userB) {
 
 function stripPunctuation(str) {
     return str.replace(/[&\/\\#,+\(\)$~%\.!^'"\;:*?\[\]<>{}]/g, '');
+}
+function getHighestScoring() {
+    users.forEach(function(user) {
+
+    });
 }
 
 function calculateScores() {
@@ -198,7 +209,7 @@ function start() {
         console.log("Time Left: " + timeToStart);
         timeToStart -= 1;
         if (timeToStart == 0) {
-            clearInterval(interval);
+            //clearInterval(interval);
             performASR();
         }
     }, 1000);
