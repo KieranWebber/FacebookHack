@@ -305,7 +305,14 @@ function sendWords() {
     socket.emit('register', {name: user.username, session: user.id, guesses: data.words});
 }
 
+var leaderboardShown = false;
+
 function showLeaderboard() {
+
+    if(leaderboardShown){
+        return;
+    }
+    leaderboardShown = true;
 
     var popular = {};
 
